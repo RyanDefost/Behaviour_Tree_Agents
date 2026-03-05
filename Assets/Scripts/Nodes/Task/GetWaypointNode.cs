@@ -13,14 +13,16 @@ public class GetWayPointNode : TaskNode
     public override void OnEnter()
     {
         base.OnEnter();
-        this.currentPoint = waypoints.CurrentPoint;
+        this.currentPoint = this.waypoints.CurrentPoint;
     }
 
     public override Status OnUpdate()
     {
         base.OnUpdate();
 
-        waypoints.SetCurrentPoint(waypoints.NextPoint(this.currentPoint));
+        Transform nextPoint = this.waypoints.NextPoint(this.currentPoint);
+        this.waypoints.SetCurrentPoint(nextPoint);
+
         return Status.SUCCESS;
     }
 

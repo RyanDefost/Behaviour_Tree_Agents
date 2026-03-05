@@ -1,17 +1,17 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MoveToNode : TaskNode
 {
+    private NavMeshAgent navMeshAgent;
     private WaypointSystem waypoints;
     private Transform currentTarget;
-
-    private Rigidbody rigidbody;
     private float speed;
 
-    public MoveToNode(Agent agent, WaypointSystem waypoints, Rigidbody rigidbody, float speed) : base(agent)
+    public MoveToNode(Agent agent, NavMeshAgent navMeshAgent, WaypointSystem waypoints, float speed) : base(agent)
     {
+        this.navMeshAgent = navMeshAgent;
         this.waypoints = waypoints;
-        this.rigidbody = rigidbody;
         this.speed = speed;
     }
 
@@ -32,7 +32,7 @@ public class MoveToNode : TaskNode
         }                           //Implement ReverseNode;
 
         Vector3 velocity = (currentTarget.position - Agent.transform.position).normalized * this.speed;
-        this.rigidbody.MovePosition(rigidbody.position + velocity * Time.deltaTime);
+        this.navMeshAgent.SetDestination(navMeshAgent.transform.position + velocity * Time.deltaTime);
 
         return Status.RUNNING;
     }

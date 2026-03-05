@@ -1,13 +1,18 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Timeline;
 
 public class Agent : MonoBehaviour
 {
     public Blackboard blackboard = new();
 
-    [SerializeField] private FieldOfView fieldOfView;
-    [SerializeField] private WaypointSystem waypoints;
-    [SerializeField] private new Rigidbody rigidbody;
+    [SerializeField] FieldOfView fieldOfView;
+    [SerializeField] WaypointSystem waypoints;
+    [SerializeField] NavMeshAgent navMeshAgent;
+
+    [Space]
+    [SerializeField] float speed;
 
     private Node baseBehaviour;
 
@@ -25,18 +30,10 @@ public class Agent : MonoBehaviour
     {
         baseBehaviour =
             new SelectorNode(
-                new MoveToNode(this, this.waypoints, this.rigidbody, 6),
+                new MoveToNode(this, this.navMeshAgent, this.waypoints, this.speed),
                 new GetWayPointNode(this, this.waypoints)
             );
 
-        baseBehaviour.SetupBlackboard(blackboard);
+        baseBehaviour.SetupBlackboard(this.blackboard);
     }
 }
-
-///
-/// What states should it have
-/// Go to position
-/// Pickup item
-/// Look for ItemType
-/// Follow path
-/// Attack "object"
