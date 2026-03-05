@@ -1,16 +1,9 @@
 using UnityEngine;
 
-public class DecoratorNode : MonoBehaviour
+public class DecoratorNode : Node
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override Status OnUpdate()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        throw new System.NotImplementedException();
     }
 }
