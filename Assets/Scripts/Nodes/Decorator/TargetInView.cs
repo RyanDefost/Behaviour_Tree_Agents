@@ -21,15 +21,27 @@ public class TargetInView : DecoratorNode
 
     public override Status OnUpdate()
     {
+        bool targetInRange = false;
+        foreach (var rangeTarget in fov.allTargets)
+        {
+            if(target == rangeTarget.position)
+                targetInRange = true;
+        }
+        if(!targetInRange)
+            this.Blackboard.SetValue("DETECTEDPLAYER", targetInRange);
+        
+        if(this.Blackboard.GetValue<bool>("DETECTEDPLAYER"))
+            return Status.SUCCESS;
+        
         //Debug.Log(target);
         foreach (var visibleItem in fov.visibleTargets)
         {
             if (target == visibleItem.position)
             {
+                this.Blackboard.SetValue("DETECTEDPLAYER", targetInRange);
                 return Status.SUCCESS;
             }
         }
-
         return Status.FAILURE;
     }
 }

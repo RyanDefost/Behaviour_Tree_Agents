@@ -61,6 +61,7 @@ public class FieldOfView : MonoBehaviour
             }
         }
     }
+    
     public Vector3 DiractionFromAngle(float angleDegrees, bool isGlobal)
     {
         if (!isGlobal) angleDegrees += transform.eulerAngles.y;
@@ -105,5 +106,34 @@ public class FieldOfView : MonoBehaviour
         }
 
         return currentVector;
+    }
+
+    public bool DetectingPlayer(Transform target, bool currentState)
+    {
+        bool targetInRange = false;
+        foreach (var rangeTarget in allTargets)
+        {
+            if(target == rangeTarget)
+                targetInRange = true;
+        }
+
+        if (!targetInRange)
+        {
+            Debug.Log("No range");
+            return false;
+        }
+        
+        if(currentState)
+            return true;
+        
+        //Debug.Log(target);
+        foreach (var visibleItem in visibleTargets)
+        {
+            if (target == visibleItem)
+                return true;
+        }
+        
+        Debug.Log("end of line");
+        return false;
     }
 }

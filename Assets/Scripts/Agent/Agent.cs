@@ -15,13 +15,15 @@ public class Agent : MonoBehaviour
 
     [Space]
     [SerializeField] float speed;
-
+    
     [Space]
     [SerializeField] Transform weaponTransform;
     public bool hasWeapon = false; //GET FROM BLACKBOARD!
 
+    [SerializeField] private Transform playerPos;
+    public bool detectingPlayer = false;
+    
     private Node baseBehaviour;
-    private Vector3 playerPos = Vector3.positiveInfinity;
 
     private void Start()
     {
@@ -38,11 +40,10 @@ public class Agent : MonoBehaviour
     private void UpdateSenses()
     {
         blackboard.SetValue("WEAPON", weaponTransform.position);
-        blackboard.SetValue("PLAYER", fieldOfView.UpdateLastClosestVector(this.transform, playerPos));
-        //blackboard.SetValue("PLAYER", fieldOfView.TryGetClosestVector(this.transform, 9, true));
-        //blackboard.SetValue("PLAYERPOS", fieldOfView.TryGetClosestTransform(this.transform, 9, true));
-
-        //blackboard.SetValue("HASWEAPON", hasWeapon);
+        blackboard.SetValue("PLAYER", fieldOfView.UpdateLastClosestVector(this.transform, playerPos.position));
+        
+        blackboard.SetValue("DETECTEDPLAYER", fieldOfView.DetectingPlayer(playerPos, detectingPlayer));
+        this.detectingPlayer = blackboard.GetValue<bool>("DETECTEDPLAYER");
     }
 
     private void CreateBehaviour()
@@ -51,7 +52,7 @@ public class Agent : MonoBehaviour
             new SelectorNode(
                 new SelectorNode( // ATTACKING 'State'
                     new Node[] // preCon
-                        { new TargetInView(this.fieldOfView, "PLAYER") },
+                        { new CheckConditionNode<bool>("DETECTEDPLAYER") },
 
                     new SequenceNode( // Get Weapon
                         new Node[] // preCon
@@ -72,6 +73,7 @@ public class Agent : MonoBehaviour
                         new WaitNode(this, 1f)
                     )
                 ),
+                
                 new SelectorNode( // PATROLLING 'State'
                     new Node[] // preCon
                         { new InverterNode(new TargetInView(this.fieldOfView, "PLAYER")) },
