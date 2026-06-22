@@ -11,8 +11,9 @@ public class TaskNode : Node
 
     public override void OnEnter()
     {
-        //Debug.Log("Enter state");
+        
     }
+
 
     public override Status OnUpdate()
     {
@@ -22,6 +23,6 @@ public class TaskNode : Node
 
     public override void OnExit()
     {
-        //Debug.Log("Exit state");
+        
     }
 }

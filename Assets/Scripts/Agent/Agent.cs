@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nodes.Task;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -25,6 +26,9 @@ public class Agent : MonoBehaviour
     
     private Node baseBehaviour;
 
+    public readonly List<Node> activeNodes = new();
+    public string namething;
+
     private void Start()
     {
         UpdateSenses();
@@ -35,11 +39,15 @@ public class Agent : MonoBehaviour
     {
         UpdateSenses();
         baseBehaviour.Run();
+        
+        namething = baseBehaviour.GetName();
     }
 
     private void UpdateSenses()
     {
         blackboard.SetValue("WEAPON", weaponTransform.position);
+        this.hasWeapon = this.blackboard.GetValue<bool>("HASWEAPON");
+        
         blackboard.SetValue("PLAYER", fieldOfView.UpdateLastClosestVector(this.transform, playerPos.position));
         
         blackboard.SetValue("DETECTEDPLAYER", fieldOfView.DetectingPlayer(playerPos, detectingPlayer));
@@ -56,20 +64,20 @@ public class Agent : MonoBehaviour
 
                     new SequenceNode( // Get Weapon
                         new Node[] // preCon
-                            { new InverterNode(new BBContainsNode<Vector3>("WEAPON")),
-                              new InverterNode(new CheckConditionNode<bool>("HASWEAPON"))},
+                        {
+                            new InverterNode(new BBContainsNode<Vector3>("WEAPON")),
+                            new InverterNode(new CheckConditionNode<bool>("HASWEAPON"))
+                        },
 
                         new PrintNode(this, "GET WEAPON"),
                         new MoveToTarget(this, this.navMeshAgent, "WEAPON", this.speed),
-                        new PickupWeapon(this, "WEAPON"),
-                        new MoveToTarget(this, this.navMeshAgent, "PLAYER", this.speed),
-                        new WaitNode(this, 5f)
+                        new PickupWeapon(this, "WEAPON")
                     ),
-                    
+
                     new SequenceNode( // Attack Player
                         new PrintNode(this, "ATTACK PLAYER"),
                         new MoveToTarget(this, this.navMeshAgent, "PLAYER", this.speed),
-                        //  new DamageTarget()
+                        new DamagePlayer(this),
                         new WaitNode(this, 1f)
                     )
                 ),

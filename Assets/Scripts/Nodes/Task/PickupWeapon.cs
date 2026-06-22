@@ -12,7 +12,10 @@ public class PickupWeapon : TaskNode
 
     public override void OnEnter()
     {
+        base.OnEnter();
         this.weapon = Blackboard.GetValue<Vector3>(this.BBWeapon);
+        
+        this.NodeName = $"{this.GetType().Name} {this.weapon}";
     }
 
     public override Status OnUpdate()

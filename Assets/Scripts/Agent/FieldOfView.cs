@@ -118,10 +118,7 @@ public class FieldOfView : MonoBehaviour
         }
 
         if (!targetInRange)
-        {
-            Debug.Log("No range");
             return false;
-        }
         
         if(currentState)
             return true;
@@ -133,7 +130,6 @@ public class FieldOfView : MonoBehaviour
                 return true;
         }
         
-        Debug.Log("end of line");
         return false;
     }
 }

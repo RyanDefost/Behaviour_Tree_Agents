@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class CompositionNode : Node
@@ -5,7 +6,7 @@ public class CompositionNode : Node
     protected Node[] nodes;
     protected Node[] preConditions;
 
-    private bool hasEnterd = false;
+    public bool hasEnterd  = false;
 
     public override Status OnUpdate()
     {
@@ -26,5 +27,18 @@ public class CompositionNode : Node
         {
             preCon.SetupBlackboard(this.Blackboard);
         }
+    }
+    
+    public override string GetName()
+    {
+        string baseName = this.NodeName;
+
+        if(preConditions != null) baseName = preConditions.Where(node => node.hasEnterd)
+            .Aggregate(baseName, (current, node) => current + ("\n preCon: " + node.GetName()));
+
+        if(nodes != null) baseName = nodes.Where(node => node.hasEnterd).
+            Aggregate(baseName, (current, node) => current + ("\n Node: " + node.GetName()));
+
+        return baseName;
     }
 }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum Status { RUNNING, SUCCESS, FAILURE }
@@ -6,7 +7,8 @@ public abstract class Node
 {
     public Blackboard Blackboard;
 
-    private bool hasEnterd = false;
+    public bool hasEnterd { get; private set; } = false;
+    public string NodeName = "Node";
 
     public Status Run()
     {
@@ -27,12 +29,21 @@ public abstract class Node
         return result;
     }
 
-    public virtual void OnEnter() { }
+    public virtual void OnEnter()
+    {
+    } //NodeName = this.GetType().Name;
+
     public abstract Status OnUpdate();
-    public virtual void OnExit() { }
+
+    public virtual void OnExit()
+    {
+    }
 
     public virtual void SetupBlackboard(Blackboard blackboard)
     {
         this.Blackboard = blackboard;
     }
+
+    public virtual string GetName() =>  this.NodeName;
+
 }

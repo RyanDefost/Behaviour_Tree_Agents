@@ -19,6 +19,8 @@ public class MoveToNode : TaskNode
     {
         base.OnEnter();
         currentTarget = waypoints.CurrentPoint;
+        
+        this.NodeName = $"{this.GetType().Name} {this.currentTarget.name}";
     }
 
     public override Status OnUpdate()

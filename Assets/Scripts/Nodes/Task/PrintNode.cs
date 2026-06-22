@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PrintNode : TaskNode
@@ -11,6 +12,8 @@ public class PrintNode : TaskNode
     public override void OnEnter()
     {
         base.OnEnter();
+        
+        this.NodeName = $"{this.GetType().Name} {this.debugMessage}";
     }
 
     public override Status OnUpdate()
@@ -19,10 +22,5 @@ public class PrintNode : TaskNode
 
         Debug.Log(debugMessage);
         return Status.SUCCESS;
-    }
-
-    public override void OnExit()
-    {
-        base.OnExit();
     }
 }

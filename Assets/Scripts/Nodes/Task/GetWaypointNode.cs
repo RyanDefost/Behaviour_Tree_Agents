@@ -14,6 +14,8 @@ public class GetWayPointNode : TaskNode
     {
         base.OnEnter();
         this.currentPoint = this.waypoints.CurrentPoint;
+        
+        this.NodeName = $"{this.GetType().Name} {this.currentPoint.name}";
     }
 
     public override Status OnUpdate()
@@ -22,12 +24,7 @@ public class GetWayPointNode : TaskNode
 
         Transform nextPoint = this.waypoints.NextPoint(this.currentPoint);
         this.waypoints.SetCurrentPoint(nextPoint);
-
+        
         return Status.SUCCESS;
-    }
-
-    public override void OnExit()
-    {
-        base.OnExit();
     }
 }

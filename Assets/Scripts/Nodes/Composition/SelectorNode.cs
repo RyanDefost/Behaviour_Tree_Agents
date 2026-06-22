@@ -7,12 +7,16 @@ public class SelectorNode : CompositionNode
     public SelectorNode(params Node[] nodes)
     {
         this.nodes = nodes;
+        
+        this.NodeName = $"{this.GetType().Name}";
     }
 
     public SelectorNode(Node[] preConditions, params Node[] nodes)
     {
         this.preConditions = preConditions;
         this.nodes = nodes;
+        
+        this.NodeName = $"{this.GetType().Name} + Conditions:";
     }
 
     public override Status OnUpdate()

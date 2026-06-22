@@ -24,9 +24,4 @@ public class GetVisibleTarget : TaskNode
         base.OnEnter();
         this.visibleTargets = Blackboard.GetValue<List<Transform>>(this.BBVisibleTargets);
     }
-
-    public override Status OnUpdate()
-    {
-        return base.OnUpdate();
-    }
 }

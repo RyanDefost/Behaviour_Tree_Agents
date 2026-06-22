@@ -12,7 +12,10 @@ public class WaitNode : TaskNode
 
     public override void OnEnter()
     {
+        base.OnEnter();
         this.timeRemaining = timeInSeconds;
+        
+        this.NodeName = $"{this.GetType().Name} {this.timeRemaining}";
     }
 
     public override Status OnUpdate()
@@ -24,6 +27,7 @@ public class WaitNode : TaskNode
         }
 
         timeRemaining = timeInSeconds;
+        
         return Status.SUCCESS;
     }
 }

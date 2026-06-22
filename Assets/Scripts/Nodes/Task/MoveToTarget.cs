@@ -20,21 +20,25 @@ public class MoveToTarget : TaskNode
     {
         base.OnEnter();
         this.target = this.Blackboard.GetValue<Vector3>(BBTarget);
+        
+        this.NodeName = $"{this.GetType().Name} {this.target}";
     }
 
     public override Status OnUpdate()
     {
-        Debug.Log("MOVING TO " + target);
-
         Vector3 velocity = (target - Agent.transform.position).normalized * this.speed;
         this.navMeshAgent.SetDestination(navMeshAgent.transform.position + velocity * Time.deltaTime);
 
-        Debug.Log(Vector3.Distance(Agent.transform.position, target));
         if (Vector3.Distance(Agent.transform.position, target) <= 1.5f)
         {
             return Status.SUCCESS;
         }
 
         return Status.RUNNING;
+    }
+
+    public override void OnExit()
+    {
+        base.OnExit();
     }
 }
