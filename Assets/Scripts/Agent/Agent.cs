@@ -25,12 +25,15 @@ public class Agent : MonoBehaviour
     public bool detectingPlayer = false;
     
     private Node baseBehaviour;
-
-    public readonly List<Node> activeNodes = new();
-    public string namething;
+    
+    public StateDisplay stateDisplay;
+    public string nodeNames;
+    
 
     private void Start()
     {
+        stateDisplay = GetComponent<StateDisplay>();
+        
         UpdateSenses();
         CreateBehaviour();
     }
@@ -40,7 +43,8 @@ public class Agent : MonoBehaviour
         UpdateSenses();
         baseBehaviour.Run();
         
-        namething = baseBehaviour.GetName();
+        nodeNames = baseBehaviour.GetName();
+        stateDisplay.SetDisplay(this, nodeNames);
     }
 
     private void UpdateSenses()

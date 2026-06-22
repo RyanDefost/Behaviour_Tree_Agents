@@ -688,7 +688,8 @@ MonoBehaviour:
   hasWeapon: 0
   playerPos: {fileID: 29306808}
   detectingPlayer: 0
-  namething: 
+  stateDisplay: {fileID: 0}
+  nodeNames: 
 --- !u!195 &310474153
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -724,7 +725,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StateDisplay
   textComponent: {fileID: 994077317}
-  agent: {fileID: 310474152}
 --- !u!1 &326756718
 GameObject:
   m_ObjectHideFlags: 0
