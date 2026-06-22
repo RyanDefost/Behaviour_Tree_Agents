@@ -23,8 +23,14 @@ public class SequenceNode : CompositionNode
         return CheckChildNodes();
     }
 
-    private bool CheckPreConditions() //NEEDS TO BE IMPLEMENTED!
+    private bool CheckPreConditions()
     {
+        if (preConditions == null) return true;
+        foreach (var condition in preConditions)
+        {
+            if (condition.Run() == Status.FAILURE) return false;
+        }
+
         return true;
     }
 

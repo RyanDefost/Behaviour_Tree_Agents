@@ -18,7 +18,13 @@ public class CompositionNode : Node
 
         foreach (var node in nodes)
         {
-            node.SetupBlackboard(blackboard);
+            node.SetupBlackboard(this.Blackboard);
+        }
+
+        if (preConditions == null) return;
+        foreach (var preCon in preConditions)
+        {
+            preCon.SetupBlackboard(this.Blackboard);
         }
     }
 }

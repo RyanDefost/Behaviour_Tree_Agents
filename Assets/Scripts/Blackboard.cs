@@ -24,4 +24,9 @@ public class Blackboard
             values.Add(name, value);
         }
     }
+
+    public bool ContainsKey(string name)
+    {
+        return values.ContainsKey(name);
+    }
 }

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,6 +14,7 @@ public class FieldOfView : MonoBehaviour
     public LayerMask ObstacleMask;
 
     public List<Transform> visibleTargets = new();
+    public List<Transform> allTargets = new();
 
     private bool isActive;
     private void OnEnable()
@@ -37,11 +40,14 @@ public class FieldOfView : MonoBehaviour
     private void FindVisableTargets()
     {
         visibleTargets.Clear();
+        allTargets.Clear();
+
         Collider[] targetsInView = Physics.OverlapSphere(transform.position, viewRange, TargetMask);
 
         for (int i = 0; i < targetsInView.Length; i++)
         {
             Transform target = targetsInView[i].transform;
+            allTargets.Add(target);
 
             Vector3 targetDir = (target.position - transform.position).normalized;
             if (Vector3.Angle(transform.forward, targetDir) < viewAngle / 2)
@@ -64,5 +70,40 @@ public class FieldOfView : MonoBehaviour
             0,
             Mathf.Cos(angleDegrees * Mathf.Deg2Rad)
         );
+    }
+
+    public Vector3 TryGetClosestVector(Transform agent, LayerMask layerMask, bool isVisable = true)
+    {
+        Vector3 closestTarget = Vector3.zero;
+        float closestDistance = math.INFINITY;
+        foreach (var transform in allTargets)
+        {
+            if (!visibleTargets.Contains(transform) && isVisable) continue;
+
+            var distance = Vector3.Distance(transform.position, agent.position);
+            if (distance < closestDistance)
+            {
+                closestTarget = transform.position;
+            }
+        }
+
+        return closestTarget;
+    }
+
+    public Vector3 UpdateLastClosestVector(Transform agent, Vector3 currentVector)
+    {
+        float closestDistance = math.INFINITY;
+        foreach (var transform in allTargets)
+        {
+            if (!visibleTargets.Contains(transform)) continue;
+
+            var distance = Vector3.Distance(transform.position, agent.position);
+            if (distance < closestDistance)
+            {
+                currentVector = transform.position;
+            }
+        }
+
+        return currentVector;
     }
 }

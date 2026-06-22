@@ -27,7 +27,6 @@ public class MoveToNode : TaskNode
 
         if (Vector3.Distance(Agent.transform.position, currentTarget.position) <= 1)
         {
-            Debug.Log("GOT TO POINT");
             return Status.FAILURE;  //SOULD NOT BE FAILURE, NEEDED TO TEST SOMETHING
         }                           //Implement ReverseNode;
 

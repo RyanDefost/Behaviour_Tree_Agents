@@ -11,17 +11,17 @@ public class TaskNode : Node
 
     public override void OnEnter()
     {
-        Debug.Log("Enter state");
+        //Debug.Log("Enter state");
     }
 
     public override Status OnUpdate()
     {
-        Debug.Log("Update state");
+        //Debug.Log("Update state");
         return Status.SUCCESS; // BASE RETURN VALUE;
     }
 
     public override void OnExit()
     {
-        Debug.Log("Exit state");
+        //Debug.Log("Exit state");
     }
 }

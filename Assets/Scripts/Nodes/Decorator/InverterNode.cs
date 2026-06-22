@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class InverterNode : DecoratorNode
 {
-    private Status inputStatus;
+    private Node inputNode;
 
-    public InverterNode(Status status)
+    public InverterNode(Node node)
     {
-        this.inputStatus = status;
+        this.inputNode = node;
     }
 
     public override Status OnUpdate()
     {
-        base.OnUpdate();
+        var status = inputNode.Run();
 
-        switch (this.inputStatus)
+        switch (status)
         {
             case Status.SUCCESS: return Status.FAILURE;
             case Status.FAILURE: return Status.SUCCESS;
@@ -22,5 +22,12 @@ public class InverterNode : DecoratorNode
         }       //NOT SURE IF IS CORRECT.
 
         return Status.RUNNING;
+    }
+
+    public override void SetupBlackboard(Blackboard blackboard)
+    {
+        base.SetupBlackboard(blackboard);
+
+        this.inputNode.SetupBlackboard(blackboard);
     }
 }

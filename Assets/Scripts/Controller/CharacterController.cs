@@ -36,7 +36,7 @@ public class CharacterController : MonoBehaviour
         if (Input.GetKey(KeyCode.S)) moveInput += Vector2.down;
         if (Input.GetKey(KeyCode.A)) moveInput += Vector2.left;
         if (Input.GetKey(KeyCode.D)) moveInput += Vector2.right;
-
+        if(moveInput == Vector2.zero) this.velocity = Vector2.zero; 
         this.velocity = new Vector3(moveInput.x, 0, moveInput.y).normalized * this.speed;
     }
 
