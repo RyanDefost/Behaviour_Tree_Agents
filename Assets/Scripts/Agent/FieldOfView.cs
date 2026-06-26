@@ -80,10 +80,13 @@ public class FieldOfView : MonoBehaviour
         foreach (var transform in allTargets)
         {
             if (!visibleTargets.Contains(transform) && isVisable) continue;
-
+            
+            if(transform.gameObject.layer != layerMask) continue;
+            
             var distance = Vector3.Distance(transform.position, agent.position);
             if (distance < closestDistance)
             {
+                closestDistance = distance;
                 closestTarget = transform.position;
             }
         }
@@ -110,25 +113,11 @@ public class FieldOfView : MonoBehaviour
 
     public bool DetectingPlayer(Transform target, bool currentState)
     {
-        bool targetInRange = false;
-        foreach (var rangeTarget in allTargets)
-        {
-            if(target == rangeTarget)
-                targetInRange = true;
-        }
-
-        if (!targetInRange)
-            return false;
-        
-        if(currentState)
+        if(visibleTargets.Contains(target))
             return true;
         
-        //Debug.Log(target);
-        foreach (var visibleItem in visibleTargets)
-        {
-            if (target == visibleItem)
-                return true;
-        }
+        if(currentState && allTargets.Contains(target))
+            return true;
         
         return false;
     }

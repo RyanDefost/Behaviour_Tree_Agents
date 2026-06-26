@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class TaskNode : Node
 {
-    protected Agent Agent;
+    protected BaseAgent BaseAgent;
 
-    public TaskNode(Agent agent)
+    public TaskNode(BaseAgent baseAgent)
     {
-        this.Agent = agent;
+        this.BaseAgent = baseAgent;
     }
 
     public override void OnEnter()

@@ -8,7 +8,7 @@ public class MoveToNode : TaskNode
     private Transform currentTarget;
     private float speed;
 
-    public MoveToNode(Agent agent, NavMeshAgent navMeshAgent, WaypointSystem waypoints, float speed) : base(agent)
+    public MoveToNode(BaseAgent baseAgent, NavMeshAgent navMeshAgent, WaypointSystem waypoints, float speed) : base(baseAgent)
     {
         this.navMeshAgent = navMeshAgent;
         this.waypoints = waypoints;
@@ -27,12 +27,12 @@ public class MoveToNode : TaskNode
     {
         base.OnUpdate();
 
-        if (Vector3.Distance(Agent.transform.position, currentTarget.position) <= 1)
+        if (Vector3.Distance(BaseAgent.transform.position, currentTarget.position) <= 1)
         {
             return Status.FAILURE;  //SOULD NOT BE FAILURE, NEEDED TO TEST SOMETHING
         }                           //Implement ReverseNode;
 
-        Vector3 velocity = (currentTarget.position - Agent.transform.position).normalized * this.speed;
+        Vector3 velocity = (currentTarget.position - BaseAgent.transform.position).normalized * this.speed;
         this.navMeshAgent.SetDestination(navMeshAgent.transform.position + velocity * Time.deltaTime);
 
         return Status.RUNNING;

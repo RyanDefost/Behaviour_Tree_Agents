@@ -13,7 +13,7 @@ public class GetVisibleTarget : TaskNode
     string BBVisibleTargets;
     private List<Transform> visibleTargets = new();
 
-    public GetVisibleTarget(Agent agent, LayerMask targetMask, string BBVisibleTargets) : base(agent)
+    public GetVisibleTarget(BaseAgent baseAgent, LayerMask targetMask, string BBVisibleTargets) : base(baseAgent)
     {
         this.targetMask = targetMask;
         this.BBVisibleTargets = BBVisibleTargets;

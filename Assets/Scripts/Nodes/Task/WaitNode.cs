@@ -5,7 +5,7 @@ public class WaitNode : TaskNode
     private float timeInSeconds;
     private float timeRemaining;
 
-    public WaitNode(Agent agent, float timeInSeconds) : base(agent)
+    public WaitNode(BaseAgent baseAgent, float timeInSeconds) : base(baseAgent)
     {
         this.timeInSeconds = timeInSeconds;
     }

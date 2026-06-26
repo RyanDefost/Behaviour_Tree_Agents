@@ -42,6 +42,7 @@ public class CharacterController : MonoBehaviour
 
     void FixedUpdate()
     {
+        this.rigidbody.linearVelocity = Vector3.zero;
         this.rigidbody.MovePosition(rigidbody.position + this.velocity * Time.deltaTime);
     }
 }

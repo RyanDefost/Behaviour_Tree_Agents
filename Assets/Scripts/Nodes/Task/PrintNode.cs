@@ -4,7 +4,7 @@ using UnityEngine;
 public class PrintNode : TaskNode
 {
     private string debugMessage;
-    public PrintNode(Agent agent, string message = "RUN") : base(agent)
+    public PrintNode(BaseAgent baseAgent, string message = "RUN") : base(baseAgent)
     {
         this.debugMessage = message;
     }

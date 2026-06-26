@@ -6,29 +6,16 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Timeline;
 
-public class Agent : MonoBehaviour
+public class GuardAgent : BaseAgent
 {
-    public Blackboard blackboard = new();
-
-    [SerializeField] FieldOfView fieldOfView;
-    [SerializeField] WaypointSystem waypoints;
-    [SerializeField] NavMeshAgent navMeshAgent;
-
-    [Space]
-    [SerializeField] float speed;
+    [Space, SerializeField] float speed;
     
-    [Space]
-    [SerializeField] Transform weaponTransform;
-    public bool hasWeapon = false; //GET FROM BLACKBOARD!
-
+    [Space, SerializeField] Transform weaponTransform;
+    public bool hasWeapon;
     [SerializeField] private Transform playerPos;
-    public bool detectingPlayer = false;
+    public bool detectingPlayer;
     
     private Node baseBehaviour;
-    
-    public StateDisplay stateDisplay;
-    public string nodeNames;
-    
 
     private void Start()
     {
@@ -44,21 +31,21 @@ public class Agent : MonoBehaviour
         baseBehaviour.Run();
         
         nodeNames = baseBehaviour.GetName();
-        stateDisplay.SetDisplay(this, nodeNames);
+        stateDisplay.SetDisplay(this, nodeNames, new [] { "HASWEAPON", "DETECTEDPLAYER" });
     }
 
-    private void UpdateSenses()
+    protected override void UpdateSenses()
     {
+        blackboard.SetValue("PLAYER", fieldOfView.TryGetClosestVector(this.transform, 9));
+        
         blackboard.SetValue("WEAPON", weaponTransform.position);
         this.hasWeapon = this.blackboard.GetValue<bool>("HASWEAPON");
         
-        blackboard.SetValue("PLAYER", fieldOfView.UpdateLastClosestVector(this.transform, playerPos.position));
-        
-        blackboard.SetValue("DETECTEDPLAYER", fieldOfView.DetectingPlayer(playerPos, detectingPlayer));
         this.detectingPlayer = blackboard.GetValue<bool>("DETECTEDPLAYER");
+        blackboard.SetValue("DETECTEDPLAYER", fieldOfView.DetectingPlayer(playerPos, detectingPlayer));
     }
 
-    private void CreateBehaviour()
+    protected override void CreateBehaviour()
     {
         baseBehaviour =
             new SelectorNode(
@@ -81,8 +68,10 @@ public class Agent : MonoBehaviour
                     new SequenceNode( // Attack Player
                         new PrintNode(this, "ATTACK PLAYER"),
                         new MoveToTarget(this, this.navMeshAgent, "PLAYER", this.speed),
-                        new DamagePlayer(this),
-                        new WaitNode(this, 1f)
+                        
+                        new WaitNode(this, 1f),
+                        new SetDetectedPlayer(this, this.fieldOfView),
+                        new DamagePlayer(this)
                     )
                 ),
                 
@@ -92,7 +81,7 @@ public class Agent : MonoBehaviour
 
                     new MoveToNode(this, this.navMeshAgent, this.waypoints, this.speed),
                     new GetWayPointNode(this, this.waypoints),
-                    new WaitNode(this, 1f) //Prob won't wait becuase of select node
+                    new WaitNode(this, 1f)
                 )
             );
 

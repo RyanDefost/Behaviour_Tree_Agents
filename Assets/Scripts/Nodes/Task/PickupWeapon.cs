@@ -5,7 +5,7 @@ public class PickupWeapon : TaskNode
     string BBWeapon;
     Vector3 weapon;
 
-    public PickupWeapon(Agent agent, string BBWeapon) : base(agent)
+    public PickupWeapon(BaseAgent baseAgent, string BBWeapon) : base(baseAgent)
     {
         this.BBWeapon = BBWeapon;
     }

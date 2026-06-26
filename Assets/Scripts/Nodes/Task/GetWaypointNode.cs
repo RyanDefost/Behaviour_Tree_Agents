@@ -5,7 +5,7 @@ public class GetWayPointNode : TaskNode
     private WaypointSystem waypoints;
     private Transform currentPoint;
 
-    public GetWayPointNode(Agent agent, WaypointSystem waypoints) : base(agent)
+    public GetWayPointNode(BaseAgent baseAgent, WaypointSystem waypoints) : base(baseAgent)
     {
         this.waypoints = waypoints;
     }

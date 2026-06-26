@@ -1,19 +1,19 @@
-using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class StateDisplay : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textComponent;
     
-    public void SetDisplay(Agent agent, string nodeNames)
+    public void SetDisplay(BaseAgent agent, string nodeNames, params string[] values)
     {
+        string valueText = values.Aggregate("", (current, BBValue) 
+            => current + $"{BBValue}: {agent.blackboard.GetValue<bool>(BBValue)} \n");
+
         textComponent.text = "\n" +
              $"{agent.name} \n" +
-             $"hasWeapon: {agent.hasWeapon} \n" +
-             $"detectedPlayer: {agent.detectingPlayer} \n" +
+             valueText +
              nodeNames +
              $" \n";
         
@@ -25,3 +25,5 @@ public class StateDisplay : MonoBehaviour
     }
 
 }
+//             $"hasWeapon: {agent.blackboard.GetValue<bool>("HASWEAPON")} \n" +
+// $"detectedPlayer: {agent.blackboard.GetValue<bool>("DETECTEDPLAYER")} \n" +
