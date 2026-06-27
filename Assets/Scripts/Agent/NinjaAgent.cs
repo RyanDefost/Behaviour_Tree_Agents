@@ -5,21 +5,25 @@ using UnityEngine;
 public class NinjaAgent : BaseAgent
 {
     [SerializeField] private Player player;
+    [SerializeField] private GameObject smokeBomb;
+    [Space, SerializeField] float speed;
     
     //Behaviour
     private Node baseBehaviour;
     
-    [SerializeField] private Vector3 playerPosition;
-    [SerializeField] private Vector3 hidingSpotPosition;
+    private Vector3 playerPosition;
+    private Vector3 hidingSpotPosition;
     
     private bool isHiding;
     private bool isPlayerAttacked;
 
     private void Start()
     {
-        stateDisplay = GetComponent<StateDisplay>();
+        StateDisplay = GetComponent<StateDisplay>();
         
+        SetInitValues();
         UpdateSenses();
+        
         CreateBehaviour();
     }
 
@@ -28,10 +32,16 @@ public class NinjaAgent : BaseAgent
         UpdateSenses();
         baseBehaviour.Run();
         
-        nodeNames = baseBehaviour.GetName();
-        stateDisplay.SetDisplay(this, nodeNames);
+        NodeNames = baseBehaviour.GetName();
+        StateDisplay.SetDisplay(this, NodeNames, new [] { "IS_HIDING", "PLAYER_IS_ATTACKED" });
     }
 
+    private void SetInitValues()
+    {
+        blackboard.SetValue("SMOKE_BOMB", smokeBomb);
+        blackboard.SetValue("PLAYER", player);
+    }
+    
     protected override void UpdateSenses()
     {
         blackboard.SetValue("PLAYER_POSITION", fieldOfView.TryGetClosestVector(this.transform, 9));
@@ -40,7 +50,7 @@ public class NinjaAgent : BaseAgent
         blackboard.SetValue("HIDE_SPOT", this.fieldOfView.TryGetClosestVector(this.transform, 10));
         this.hidingSpotPosition = blackboard.GetValue<Vector3>("HIDE_SPOT");
         
-        blackboard.SetValue("PLAYER_IS_ATTACKED", this.player.isAttacked);
+        blackboard.SetValue("PLAYER_IS_ATTACKED", this.player.IsAttacked);
         this.isPlayerAttacked = blackboard.GetValue<bool>("PLAYER_IS_ATTACKED");
         
         blackboard.SetValue("IS_HIDING", Vector3.Distance(this.transform.position, this.fieldOfView.TryGetClosestVector(this.transform, 10)) < 1f);
@@ -59,14 +69,14 @@ public class NinjaAgent : BaseAgent
                         new Node[] //preCon
                             { new InverterNode(new CheckConditionNode<bool>("IS_HIDING")) },
 
-                        new MoveToTarget(this, this.navMeshAgent, "HIDE_SPOT", 5),
+                        new MoveToTarget(this, this.navMeshAgent, "HIDE_SPOT", this.speed),
                         new SetBBCondition(this, "IS_HIDING", true)
                     ),
                     
                     new SequenceNode( //ASSIST STATE
                         new WaitNode(this, 3f),
-                        new PrintNode(this, "THROWING BOMBS")
-                        //new TrowSmokeBomb(this) 
+                        new PrintNode(this, "THROWING_BOMBS"),
+                        new TrowSmokeBombNode(this) 
                     )
                 ),
                 
@@ -75,7 +85,7 @@ public class NinjaAgent : BaseAgent
                         { new InverterNode(new CheckDistanceNode(this, "PLAYER_POSITION", 3)) },
                     
                     new SetBBCondition(this, "IS_HIDING", false),
-                    new MoveToTarget(this, this.navMeshAgent, "PLAYER_POSITION", 5)
+                    new MoveToTarget(this, this.navMeshAgent, "PLAYER_POSITION", this.speed)
                 )
             );
 

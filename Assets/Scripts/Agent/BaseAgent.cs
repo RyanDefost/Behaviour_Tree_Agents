@@ -9,8 +9,8 @@ public abstract class BaseAgent : MonoBehaviour
     [SerializeField] protected WaypointSystem waypoints;
     [SerializeField] protected NavMeshAgent navMeshAgent;
 
-    public StateDisplay stateDisplay;
-    public string nodeNames;
+    protected StateDisplay StateDisplay;
+    protected string NodeNames;
     
     protected abstract void UpdateSenses();
     

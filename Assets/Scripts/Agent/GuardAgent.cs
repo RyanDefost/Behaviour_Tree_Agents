@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using Nodes.Task;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -8,20 +9,24 @@ using UnityEngine.Timeline;
 
 public class GuardAgent : BaseAgent
 {
+    [SerializeField] private Player player;
+    [SerializeField] private Transform weaponTransform;
+    
     [Space, SerializeField] float speed;
     
-    [Space, SerializeField] Transform weaponTransform;
-    public bool hasWeapon;
-    [SerializeField] private Transform playerPos;
-    public bool detectingPlayer;
-    
+    //Behaviour
     private Node baseBehaviour;
+    
+    private bool detectingPlayer;
+    private bool hasWeapon;
 
     private void Start()
     {
-        stateDisplay = GetComponent<StateDisplay>();
+        StateDisplay = GetComponent<StateDisplay>();
         
+        SetInitValues();
         UpdateSenses();
+        
         CreateBehaviour();
     }
 
@@ -30,10 +35,15 @@ public class GuardAgent : BaseAgent
         UpdateSenses();
         baseBehaviour.Run();
         
-        nodeNames = baseBehaviour.GetName();
-        stateDisplay.SetDisplay(this, nodeNames, new [] { "HASWEAPON", "DETECTEDPLAYER" });
+        NodeNames = baseBehaviour.GetName();
+        StateDisplay.SetDisplay(this, NodeNames, new [] { "HASWEAPON", "DETECTEDPLAYER", "ISBLINDED" });
     }
 
+    private void SetInitValues()
+    {
+        blackboard.SetValue("ISBLINDED", false);
+    }
+    
     protected override void UpdateSenses()
     {
         blackboard.SetValue("PLAYER", fieldOfView.TryGetClosestVector(this.transform, 9));
@@ -42,7 +52,7 @@ public class GuardAgent : BaseAgent
         this.hasWeapon = this.blackboard.GetValue<bool>("HASWEAPON");
         
         this.detectingPlayer = blackboard.GetValue<bool>("DETECTEDPLAYER");
-        blackboard.SetValue("DETECTEDPLAYER", fieldOfView.DetectingPlayer(playerPos, detectingPlayer));
+        blackboard.SetValue("DETECTEDPLAYER", fieldOfView.DetectingPlayer(player.transform, detectingPlayer));
     }
 
     protected override void CreateBehaviour()
@@ -51,7 +61,10 @@ public class GuardAgent : BaseAgent
             new SelectorNode(
                 new SelectorNode( // ATTACKING 'State'
                     new Node[] // preCon
-                        { new CheckConditionNode<bool>("DETECTEDPLAYER") },
+                    {
+                        new CheckConditionNode<bool>("DETECTEDPLAYER"),
+                        new InverterNode(new CheckConditionNode<bool>("ISBLINDED")),
+                    },
 
                     new SequenceNode( // Get Weapon
                         new Node[] // preCon
@@ -70,8 +83,8 @@ public class GuardAgent : BaseAgent
                         new MoveToTarget(this, this.navMeshAgent, "PLAYER", this.speed),
                         
                         new WaitNode(this, 1f),
-                        new SetDetectedPlayer(this, this.fieldOfView),
-                        new DamagePlayer(this)
+                        new DamagePlayer(this, this.player),
+                        new SetDetectedPlayer(this, this.fieldOfView)
                     )
                 ),
                 

@@ -62,7 +62,7 @@ public class FieldOfView : MonoBehaviour
         }
     }
     
-    public Vector3 DiractionFromAngle(float angleDegrees, bool isGlobal)
+    public Vector3 DirectionFromAngle(float angleDegrees, bool isGlobal)
     {
         if (!isGlobal) angleDegrees += transform.eulerAngles.y;
 
@@ -92,23 +92,6 @@ public class FieldOfView : MonoBehaviour
         }
 
         return closestTarget;
-    }
-
-    public Vector3 UpdateLastClosestVector(Transform agent, Vector3 currentVector)
-    {
-        float closestDistance = math.INFINITY;
-        foreach (var transform in allTargets)
-        {
-            if (!visibleTargets.Contains(transform)) continue;
-
-            var distance = Vector3.Distance(transform.position, agent.position);
-            if (distance < closestDistance)
-            {
-                currentVector = transform.position;
-            }
-        }
-
-        return currentVector;
     }
 
     public bool DetectingPlayer(Transform target, bool currentState)
