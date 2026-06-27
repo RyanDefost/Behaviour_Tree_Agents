@@ -27,7 +27,7 @@ public class NinjaAgent : BaseAgent
         CreateBehaviour();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         UpdateSenses();
         baseBehaviour.Run();

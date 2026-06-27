@@ -30,7 +30,7 @@ public class GuardAgent : BaseAgent
         CreateBehaviour();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         UpdateSenses();
         baseBehaviour.Run();

@@ -1,9 +1,4 @@
-using System;
-using System.Runtime.InteropServices;
-using JetBrains.Rider.Unity.Editor;
-using UnityEditor.Timeline;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// Script Credits
 /// Sebastian Lague: https://www.youtube.com/watch?v=rQG9aUWarwE
